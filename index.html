@@ -165,26 +165,25 @@
     <!-- Livros serão carregados aqui -->
 </div>
 
-<!-- Firebase Config -->
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
-<script>
-    // Configuração do Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyAphtPredq1GUdCroaxJe9eyWRfLy27mpE",
-        authDomain: "bookflix-39406.firebaseapp.com",
-        projectId: "bookflix-39406",
-        storageBucket: "bookflix-39406.firebasestorage.app",
-        messagingSenderId: "222500839972",
-        appId: "1:222500839972:web:50f8eb1c7785cdbada2eb1",
-        measurementId: "G-0RBZHQF1D2"
-    };
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
+  import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
 
-    // Inicializando Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+  const firebaseConfig = {
+      apiKey: "AIzaSyAphtPredq1GUdCroaxJe9eyWRfLy27mpE",
+      authDomain: "bookflix-39406.firebaseapp.com",
+      projectId: "bookflix-39406",
+      storageBucket: "bookflix-39406.firebasestorage.app",
+      messagingSenderId: "222500839972",
+      appId: "1:222500839972:web:50f8eb1c7785cdbada2eb1"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+ 
 
     // Mostrar formulário de cadastro
     function showRegisterForm() {
