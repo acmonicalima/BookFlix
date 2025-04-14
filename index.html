@@ -4,165 +4,94 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bookflix - Login / Cadastro</title>
-  
-  <!-- Estilo Netflix -->
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #141414;
-      color: #fff;
-      background-image: linear-gradient(to top, #000000cc, #000000cc), url('https://raw.githubusercontent.com/acmonicalima/bookflix/main/netflix-bg.jpg');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: auto;
-      padding: 2rem;
-      background-color: rgba(0,0,0,0.75);
-      border-radius: 10px;
-      box-shadow: 0 0 10px #000;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-
-    input, select {
-      background-color: #333;
-      color: white;
-    }
-
-    button {
-      background-color: #e50914;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #f6121d;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-      color: #fff;
-    }
-
-    /* Estilo da vitrine de livros */
-    #livro-destaque {
-      width: 100%;
-      display: flex;
-      background-color: #111;
-      color: #fff;
-      margin-bottom: 30px;
-      padding: 20px;
-      gap: 20px;
-      border-radius: 20px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.1);
-    }
-
-    #livro-destaque img {
-      width: 200px;
-      border-radius: 10px;
-    }
-
-    #livro-destaque .info {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    /* Carrossel de livros no estilo Netflix */
-    .carrossel-livros {
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding-bottom: 20px;
-      scroll-behavior: smooth;
-    }
-
-    .carrossel-livros::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .carrossel-livros::-webkit-scrollbar-thumb {
-      background: #444;
-      border-radius: 10px;
-    }
-
-    .livro {
-      flex: 0 0 auto;
-      width: 150px;
-      background: #1e1e1e;
-      color: white;
-      border-radius: 10px;
-      padding: 10px;
-      transition: transform 0.3s ease;
-    }
-
-    .livro img {
-      width: 100%;
-      border-radius: 10px;
-    }
-
-    .livro:hover {
-      transform: scale(1.05);
-    }
-
-    .titulo-categoria {
-      margin-left: 10px;
-      font-size: 24px;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Conteúdo da página de login/cadastro -->
-  <div class="container">
-    <h2>Login / Cadastro</h2>
-    <!-- Adicione seu formulário de login/cadastro aqui -->
-  </div>
-
-  <!-- Vitrine de livros -->
-  <div id="livro-destaque">
-    <img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/malala.jpeg" alt="Malala" />
-    <div class="info">
-      <h3>Malala</h3>
-      <p>Sinopse curta sobre o livro Malala.</p>
-    </div>
-  </div>
-
-  <div class="carrossel-livros">
-    <div class="livro">
-      <img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/malala.jpeg" alt="Malala" />
-      <p>Malala</p>
-    </div>
-    <div class="livro">
-      <img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/amigocaio.jpeg" alt="Ao meu amigo Caio" />
-      <p>Ao meu amigo Caio</p>
-    </div>
-    <div class="livro">
-      <img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/naminhapele.jpeg" alt="Na minha Pele" />
-      <p>Na minha Pele</p>
-    </div>
-    <div class="livro">
-      <img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/ocacadordepipas.jpeg" alt="O Caçador de Pipas" />
-      <p>O Caçador de Pipas</p>
-    </div>
-  </div>
-
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 100%;
+            height: auto; /* Responsividade da logo */
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #333;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #b81d16;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        .vitrine {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .livro {
+            background-color: #222;
+            width: 150px;
+            margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            color: #fff;
+        }
+        .livro img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .livro p {
+            padding: 10px;
+            font-size: 14px;
+        }
+        .livro .button {
+            background-color: #e50914;
+            padding: 10px;
+            margin: 5px;
+            width: 90%;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .livro .button:hover {
+            background-color: #b81d16;
+        }
     </style>
 </head>
 <body>
@@ -207,120 +136,114 @@
 </div>
 
 <script type="module">
-  import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
+  import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
 
-const db = getFirestore();
-const colecaoEmprestimos = collection(db, "emprestimos");
-
-// Supondo que você já tenha o nome do usuário logado salvo em:
-let usuarioLogado = sessionStorage.getItem("usuarioLogado"); // ou como preferir
-
-// Função para verificar quantos livros o usuário tem emprestados
-async function contarEmprestimosAtivos(usuario) {
-  const q = query(colecaoEmprestimos, where("usuario", "==", usuario));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.size;
-}
-
-// Função para emprestar um livro
-async function emprestarLivro(livroId, livroNome) {
-  if (!usuarioLogado) {
-    alert("Você precisa estar logado para emprestar um livro.");
-    return;
-  }
-
-  const emprestimosAtuais = await contarEmprestimosAtivos(usuarioLogado);
-  if (emprestimosAtuais >= 2) {
-    alert("Você já tem 2 livros emprestados. Devolva um antes de pegar outro.");
-    return;
-  }
-
-  const dataAtual = new Date();
-  const emprestimo = {
-    usuario: usuarioLogado,
-    livroId: livroId,
-    livroNome: livroNome,
-    dataEmprestimo: dataAtual.toISOString(),
-    diasRestantes: 15,
-    renovado: false
+  const firebaseConfig = {
+    apiKey: "AIzaSyAphtPredq1GUdCroaxJe9eyWRfLy27mpE",
+    authDomain: "bookflix-39406.firebaseapp.com",
+    projectId: "bookflix-39406",
+    storageBucket: "bookflix-39406.appspot.com",
+    messagingSenderId: "222500839972",
+    appId: "1:222500839972:web:50f8eb1c7785cdbada2eb1"
   };
 
-  await addDoc(colecaoEmprestimos, emprestimo);
-  atualizarEstoque(livroId, -1);
-  alert(`Livro "${livroNome}" emprestado com sucesso!`);
-}
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-// Função para devolver um livro
-async function devolverLivro(livroId) {
-  const q = query(colecaoEmprestimos, where("usuario", "==", usuarioLogado), where("livroId", "==", livroId));
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.empty) {
-    alert("Você não tem esse livro emprestado.");
-    return;
-  }
+  window.showRegisterForm = function () {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'block';
+  };
 
-  querySnapshot.forEach(async (docSnap) => {
-    await deleteDoc(doc(db, "emprestimos", docSnap.id));
-    atualizarEstoque(livroId, +1);
-    alert("Livro devolvido com sucesso!");
-  });
-}
+  window.showLoginForm = function () {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('registerForm').style.display = 'none';
+  };
 
-// Função para renovar o empréstimo
-async function renovarEmprestimo(livroId) {
-  const q = query(colecaoEmprestimos, where("usuario", "==", usuarioLogado), where("livroId", "==", livroId));
-  const querySnapshot = await getDocs(q);
+  window.loginUser = async function () {
+    const name = document.getElementById('loginName').value;
+    const dob = document.getElementById('loginDob').value;
 
-  if (!querySnapshot.empty) {
-    const docSnap = querySnapshot.docs[0];
-    const dados = docSnap.data();
-
-    if (dados.renovado) {
-      alert("Este livro já foi renovado uma vez.");
+    if (!name || !dob) {
+      document.getElementById('loginError').innerText = "Por favor, preencha todos os campos!";
       return;
     }
 
-    const docRef = doc(db, "emprestimos", docSnap.id);
-    await updateDoc(docRef, {
-      diasRestantes: dados.diasRestantes + 15,
-      renovado: true
+    // Consulta para buscar usuário pelo nome e data de nascimento
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("name", "==", name), where("dob", "==", dob));
+    
+    try {
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        alert("Login bem-sucedido!");
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('livrosVitrine').style.display = 'block';
+        loadBooks();
+      } else {
+        document.getElementById('loginError').innerText = "Usuário não encontrado.";
+      }
+    } catch (error) {
+      document.getElementById('loginError').innerText = "Erro ao buscar usuário: " + error.message;
+    }
+  };
+
+  window.registerUser = async function () {
+    const name = document.getElementById('registerName').value;
+    const dob = document.getElementById('registerDob').value;
+    const userType = document.getElementById('userType').value;
+
+    if (!name || !dob || !userType) {
+      document.getElementById('registerError').innerText = 'Preencha todos os campos';
+      return;
+    }
+
+    // Remove espaços e deixa o nome minúsculo para criar um "email" válido
+    const safeName = name.toLowerCase().replace(/\s+/g, '');
+    const email = safeName + '@bookflix.com';
+    const password = userType === 'administrador' ? 'adminPassword' : dob;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await addDoc(collection(db, 'users'), {
+        name: name,
+        dob: dob,
+        type: userType,
+        uid: user.uid
+      });
+
+      alert("Cadastro realizado com sucesso!");
+      showLoginForm();
+    } catch (error) {
+      document.getElementById('registerError').innerText = error.message;
+    }
+  };
+
+  async function loadBooks() {
+    document.getElementById('loadingSpinner').style.display = 'block';
+    const livrosRef = collection(db, 'livros');
+    const snapshot = await getDocs(livrosRef);
+    const livrosContainer = document.getElementById('livrosVitrine');
+
+    snapshot.forEach((doc) => {
+      const livroData = doc.data();
+      const livroElement = document.createElement('div');
+      livroElement.classList.add('livro');
+      livroElement.innerHTML = `
+        <img src="${livroData.capa}" alt="${livroData.nome}">
+        <p>${livroData.nome}</p>
+        <button class="button">Emprestar</button>
+      `;
+      livrosContainer.appendChild(livroElement);
     });
 
-    alert("Renovação feita com sucesso. +15 dias!");
+    document.getElementById('loadingSpinner').style.display = 'none';
   }
-}
-
-// Atualizar estoque do livro (exemplo: -1 ou +1)
-async function atualizarEstoque(livroId, valor) {
-  const livroRef = doc(db, "livros", livroId);
-  const livroSnap = await getDoc(livroRef);
-  if (livroSnap.exists()) {
-    const estoqueAtual = livroSnap.data().estoque || 0;
-    await updateDoc(livroRef, { estoque: estoqueAtual + valor });
-  }
-}
-
-// Exibir contador de dias restantes (chamar após carregar a vitrine)
-async function exibirContadorDiasRestantes() {
-  const q = query(colecaoEmprestimos, where("usuario", "==", usuarioLogado));
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((docSnap) => {
-    const emprestimo = docSnap.data();
-    const dataEmprestimo = new Date(emprestimo.dataEmprestimo);
-    const hoje = new Date();
-    const diasPassados = Math.floor((hoje - dataEmprestimo) / (1000 * 60 * 60 * 24));
-    const diasRestantes = Math.max(0, emprestimo.diasRestantes - diasPassados);
-
-    // Exibe os dias restantes de forma simples no console (ou você pode atualizar no HTML)
-    console.log(`Livro "${emprestimo.livroNome}": ${diasRestantes} dias restantes`);
-  });
-}
-
-// Exemplo de uso: (você adapta pros botões)
-document.getElementById("btnEmprestarMalala").addEventListener("click", () => emprestarLivro("MALALA", "Malala"));
-document.getElementById("btnDevolverMalala").addEventListener("click", () => devolverLivro("MALALA"));
-document.getElementById("btnRenovarMalala").addEventListener("click", () => renovarEmprestimo("MALALA"));
 </script>
 
 
