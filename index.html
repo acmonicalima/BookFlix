@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookflix - Login / Cadastro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 150px; /* Ajuste o tamanho da imagem conforme necessário */
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #333;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #b81d16;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        .vitrine {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .livro {
+            background-color: #222;
+            width: 150px;
+            margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            color: #fff;
+        }
+        .livro img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .livro p {
+            padding: 10px;
+            font-size: 14px;
+        }
+        .livro .button {
+            background-color: #e50914;
+            padding: 10px;
+            margin: 5px;
+            width: 90%;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .livro .button:hover {
+            background-color: #b81d16;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Logo Bookflix -->
+<img src="logobookflix.jpeg" alt="Logo Bookflix" class="logo">
+
+<div class="container">
+    <h1>Login / Cadastro</h1>
+
+    <!-- Formulário de login -->
+    <div id="loginForm">
+        <input type="text" id="loginName" placeholder="Nome" required>
+        <input type="date" id="loginDob" placeholder="Data de Nascimento" required>
+        <button onclick="loginUser()">Entrar</button>
+        <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegisterForm()">Cadastre-se</a></p>
+        <p class="error" id="loginError"></p>
+    </div>
+
+    <!-- Formulário de cadastro -->
+    <div id="registerForm" style="display:none;">
+        <input type="text" id="registerName" placeholder="Nome" required>
+        <input type="date" id="registerDob" placeholder="Data de Nascimento" required>
+        <select id="userType">
+            <option value="aluno">Aluno</option>
+            <option value="professor">Professor</option>
+            <option value="administrador">Administrador</option>
+        </select>
+        <button onclick="registerUser()">Cadastrar</button>
+        <p>Já tem uma conta? <a href="javascript:void(0)" onclick="showLoginForm()">Faça login</a></p>
+        <p class="error" id="registerError"></p>
+    </div>
+</div>
+
+<!-- Vitrine de Livros -->
+<div class="vitrine" id="livrosVitrine" style="display:none;">
+    <h1>Vitrine de Livros</h1>
+    <!-- Livros serão carregados aqui -->
+</div>
+
+<!-- Firebase Config -->
+<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+<script>
+    // Configuração do Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyAphtPredq1GUdCroaxJe9eyWRfLy27mpE",
+        authDomain: "bookflix-39406.firebaseapp.com",
+        projectId: "bookflix-39406",
+        storageBucket: "bookflix-39406.firebasestorage.app",
+        messagingSenderId: "222500839972",
+        appId: "1:222500839972:web:50f8eb1c7785cdbada2eb1",
+        measurementId: "G-0RBZHQF1D2"
+    };
+    // Inicializar o Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Mostrar formulário de cadastro
+    function showRegisterForm() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+
+    // Mostrar formulário de login
+    function showLoginForm() {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+    }
+
+    // Função para login
+    async function loginUser() {
+        const name = document.getElementById('loginName').value;
+        const dob = document.getElementById('loginDob').value;
+        const userRef = db.collection('users').where("name", "==", name).where("dob", "==", dob);
+        const querySnapshot = await userRef.get();
+
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            if (userData) {
+                // Lógica de login bem-sucedido
+                alert('Login bem-sucedido!');
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('livrosVitrine').style.display = 'block';
+                loadBooks();
+            }
+        } else {
+            document.getElementById('loginError').innerText = 'Usuário não encontrado';
+        }
+    }
+
+    // Função para cadastro
+    async function registerUser() {
+        const name = document.getElementById('registerName').value;
+        const dob = document.getElementById('registerDob').value;
+        const userType = document.getElementById('userType').value;
+
+        if (!name || !dob || !userType) {
+            document.getElementById('registerError').innerText = 'Preencha todos os campos';
+            return;
+        }
+
+        const password = userType === 'administrador' ? userType : dob;
+
+        try {
+            const userCredential = await auth.createUserWithEmailAndPassword(name + '@bookflix.com', password);
+            const user = userCredential.user;
+
+            await db.collection('users').add({
+                name: name,
+                dob: dob,
+                type: userType,
+                uid: user.uid
+            });
+
+            alert('Cadastro bem-sucedido!');
+            showLoginForm();
+        } catch (error) {
+            document.getElementById('registerError').innerText = error.message;
+        }
+    }
+
+    // Função para carregar os livros na vitrine
+    async function loadBooks() {
+        const livrosRef = db.collection('livros');  // Assumindo que o Google Sheets sincroniza os livros aqui
+        const querySnapshot = await livrosRef.get();
+        const vitrine = document.getElementById('livrosVitrine');
+
+        querySnapshot.forEach(doc => {
+            const livroData = doc.data();
+            const livroDiv = document.createElement('div');
+            livroDiv.classList.add('livro');
+            livroDiv.innerHTML = `
+                <img src="${livroData.capa}" alt="${livroData.titulo}">
+                <p><strong>${livroData.titulo}</strong></p>
+                <p>${livroData.autor}</p>
+                <p>${livroData.sinopse}</p>
+                <button class="button">Emprestar</button>
+                <button class="button">Renovar</button>
+                <button class="button">Devolver</button>
+            `;
+            vitrine.appendChild(livroDiv);
+        });
+    }
+</script>
+
+</body>
+</html>
