@@ -167,17 +167,28 @@
   window.loginUser = async function () {
     const name = document.getElementById('loginName').value;
     const dob = document.getElementById('loginDob').value;
+
+    if (!name || !dob) {
+      document.getElementById('loginError').innerText = "Por favor, preencha todos os campos!";
+      return;
+    }
+
+    // Consulta para buscar usuário pelo nome e data de nascimento
     const usersRef = collection(db, "users");
     const q = query(usersRef, where("name", "==", name), where("dob", "==", dob));
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      alert("Login bem-sucedido!");
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('livrosVitrine').style.display = 'block';
-      loadBooks();
-    } else {
-      document.getElementById('loginError').innerText = "Usuário não encontrado.";
+    
+    try {
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        alert("Login bem-sucedido!");
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('livrosVitrine').style.display = 'block';
+        loadBooks();
+      } else {
+        document.getElementById('loginError').innerText = "Usuário não encontrado.";
+      }
+    } catch (error) {
+      document.getElementById('loginError').innerText = "Erro ao buscar usuário: " + error.message;
     }
   };
 
@@ -235,6 +246,5 @@
     document.getElementById('loadingSpinner').style.display = 'none';
   }
 </script>
-
 </body>
 </html>
