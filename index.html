@@ -28,7 +28,8 @@
         .logo {
             display: block;
             margin: 0 auto 20px;
-            width: 150px; /* Ajuste o tamanho da imagem conforme necessário */
+            max-width: 100%;
+            height: auto; /* Responsividade da logo */
         }
         input, select {
             width: 100%;
@@ -96,7 +97,7 @@
 <body>
 
 <!-- Logo Bookflix -->
-<img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/logobookflix.jpeg" alt="Logo Bookflix" style="width: 100%; height: auto;">
+<img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/logobookflix.jpeg" alt="Logo Bookflix" class="logo">
 
 <div class="container">
     <h1>Login / Cadastro</h1>
