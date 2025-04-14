@@ -95,11 +95,7 @@
     </style>
 </head>
 <body>
-  
-  </style>
-</head>
-<body>
-
+  <button onclick="adicionarAdministrador()">Criar Admin</button>
 <img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/logobookflix.jpeg" alt="Logo Bookflix" class="logo">
 
 <div class="container">
@@ -134,7 +130,7 @@
   <h1>Vitrine de Livros</h1>
   <div id="loadingSpinner" class="spinner" style="display:none;"></div>
 </div>
-
+<!--configuração firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
@@ -171,6 +167,19 @@
       document.getElementById('loginError').innerText = "Por favor, preencha todos os campos!";
       return;
     }
+ window.adicionarAdministrador = async function () {
+    try {
+      await addDoc(collection(db, "administradores"), {
+        nome: "João Silva",
+        dataNascimento: "1980-12-15",
+        senha: "admin123",
+        tipo: "admin"
+      });
+      alert('Administrador adicionado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao adicionar administrador: ', error);
+    }
+  };
 
     // Consulta para buscar usuário pelo nome e data de nascimento
     const usersRef = collection(db, "users");
@@ -244,6 +253,34 @@
 
     document.getElementById('loadingSpinner').style.display = 'none';
   }
+
+  // Função para verificar se o usuário é admin após o login
+function verificarAdmin() {
+  var user = firebase.auth().currentUser;
+
+  if (user) {
+    // Buscar o usuário no Firestore para verificar se é admin
+    firebase.firestore().collection('usuarios').doc(user.uid).get()
+      .then((doc) => {
+        if (doc.exists) {
+          var usuario = doc.data();
+          if (usuario.admin) {
+            console.log("Bem-vindo, Administrador!");
+            // Redirecionar para área administrativa ou mostrar funcionalidades exclusivas
+          } else {
+            console.log("Usuário comum.");
+            // Redirecionar para área de usuário comum
+          }
+        } else {
+          console.log("Usuário não encontrado.");
+        }
+      }).catch((error) => {
+        console.error("Erro ao verificar dados do usuário: ", error);
+      });
+  } else {
+    console.log("Usuário não logado.");
+  }
+}
 </script>
 
 
