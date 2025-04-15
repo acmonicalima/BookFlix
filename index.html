@@ -209,6 +209,7 @@
     <div class="school">CIEP BRIZOLÃO 183 - JOÃO VITTA</div>
     <div class="frase" id="frase"></div>
 
+
     <div class="container-voltar">
       <button onclick="voltar()" class="btn-voltar">Voltar</button>
   </div>
@@ -259,145 +260,239 @@
     Animação Cultural
   </footer>
 
+<!-- Firebase SDK compatível com browser -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
+<script>
+  const frases = [
+    `"A leitura é, provavelmente, uma outra maneira de estar em um lugar." — José Saramago`,
+    `"Um livro, uma caneta, uma criança e um professor podem mudar o mundo." — Malala Yousafzai`,
+    `"A leitura engrandece a alma." — Voltaire`,
+    `"Ler é sonhar pela mão de outro." — Fernando Pessoa`,
+    `"Quem compartilha um livro, compartilha um universo." — Desconhecido`,
+    `"A leitura é uma viagem sem fim." — Anônimo`,
+    `"Os livros são os nossos melhores amigos." — Anônimo`,
+    `"Ler é viver mil vidas em uma só." — Anônimo`,
+    `"Um livro é um sonho que você pode segurar na mão." — Neil Gaiman`,
+    `"A leitura é a chave para a liberdade." — Oprah Winfrey`,
+    `"Cada livro é um mundo a ser explorado." — Anônimo`
+  ];
+  document.getElementById("frase").innerText = frases[Math.floor(Math.random() * frases.length)];
 
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  let usuarioLogado = null;
+  const livros = [
+    { titulo: "Ao meu amigo Caio", autor: "Sandra Saruê", imagem: "amigocaio.jpeg", estoque: 1, destaque: true, sinopse: "Uma homenagem tocante à amizade e memória." },
+    { titulo: "MALALA", autor: "MALALA", imagem: "malala.jpeg", estoque: 10, sinopse: "A incrível história de uma menina que defendeu o direito à educação." },
+    { titulo: "Na minha Pele", autor: "Lázaro Ramos", imagem: "naminhapele.jpeg", estoque: 10, sinopse: "Reflexões sinceras sobre identidade e sociedade." },
+    { titulo: "O Pequeno Príncipe", autor: "Antoine de Saint-Exupéry", imagem: "pequenoprincipe.jpeg", estoque: 1, sinopse: "Um clássico que nos faz olhar o mundo com o coração." },
+    { titulo: "O sol é para todos", autor: "Harper Lee", imagem: "osoleparatodos.jpg", estoque: 10, sinopse: "Uma história comovente sobre justiça e empatia." },
+    { titulo: "O Caçador de Pipas", autor: "Desconhecido", imagem: "ocacadordepipas.jpeg", estoque: 5, sinopse: "Amizade, perdão e redenção no Afeganistão." }
+  ];
+  
+  const mapaDeEmprestimos = {};
 
-  <script>
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBDx8P3EBS_PxulDBGLG03JYBztx2NsvXY",
-      authDomain: "bookflix-72bf6.firebaseapp.com",
-      databaseURL: "https://bookflix-72bf6-default-rtdb.firebaseio.com",
-      projectId: "bookflix-72bf6",
-      storageBucket: "bookflix-72bf6.firebasestorage.app",
-      messagingSenderId: "942375721594",
-      appId: "1:942375721594:web:95fcf3c05e5b7aeb3279c3"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+  function mostrarCadastro() {
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("cadastro").classList.remove("hidden");
+  }
 
-    // Mostrar seções
-    function mostrarCadastro() {
-      document.getElementById('login-section').classList.remove('active');
-      document.getElementById('cadastro-section').classList.add('active');
+  function mostrarLogin() {
+    document.getElementById("cadastro").classList.add("hidden");
+    document.getElementById("login").classList.remove("hidden");
+  }
+
+  async function fazerCadastro() {
+    const nome = document.getElementById("cadNome").value;
+    const nascimento = document.getElementById("cadNascimento").value;
+    const tipo = document.getElementById("cadTipo").value;
+
+    if (!nome || !nascimento || !tipo) {
+      alert("Preencha todos os campos!");
+      return;
     }
 
-    function mostrarLogin() {
-      document.getElementById('cadastro-section').classList.remove('active');
-      document.getElementById('login-section').classList.add('active');
-    }
-
-    function mostrarCamposExtras() {
-      const tipo = document.getElementById('cadTipo').value;
-      const campo = document.getElementById('campoExtra');
-      if (tipo === "aluno") campo.placeholder = "Turma";
-      else if (tipo === "professor") campo.placeholder = "Disciplina";
-      else if (tipo === "admin") campo.placeholder = "Senha do cargo";
-      campo.style.display = tipo ? 'block' : 'none';
-    }
-
-    // Cadastro
-    async function cadastrar() {
-      const nome = document.getElementById('cadNome').value;
-      const nascimento = document.getElementById('cadNascimento').value;
-      const tipo = document.getElementById('cadTipo').value;
-      const extra = document.getElementById('campoExtra').value;
-
-      if (!nome || !nascimento || !tipo) {
-        alert("Preencha todos os campos.");
-        return;
-      }
-
-      const senha = tipo === "admin" ? extra : nascimento;
-
+    try {
       await db.collection("usuarios").add({
-        nome, nascimento, tipo, senha, extra
+        nome: nome,
+        nascimento: nascimento,
+        tipo: tipo
       });
 
       alert("Cadastro realizado com sucesso!");
       mostrarLogin();
+    } catch (erro) {
+      console.error("Erro ao cadastrar:", erro);
+      alert("Erro ao cadastrar. Tente novamente.");
+    }
+  }
+
+  function fazerLogin() {
+    const nome = document.getElementById('loginNome').value;
+    const dataNascimento = document.getElementById('loginNascimento').value;
+
+    const usuariosRef = db.collection('usuarios');
+
+    usuariosRef
+      .where('nome', '==', nome)
+      .where('nascimento', '==', dataNascimento)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          alert('Usuário não encontrado ou dados incorretos.');
+        } else {
+          querySnapshot.forEach((doc) => {
+            const usuario = doc.data();
+            usuarioLogado = usuario;
+            alert('Login realizado com sucesso! Bem-vindo(a), ' + usuario.nome);
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('vitrine').classList.remove('hidden');
+            mostrarLivros();
+                     });
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao fazer login:', error);
+      });
+  }
+
+  function contarEmprestimos() {
+    return Object.keys(mapaDeEmprestimos).filter(k => k.startsWith(usuarioLogado.nome)).length;
+  }
+
+  function emprestarLivro(i) {
+    if (!usuarioLogado) return;
+    const key = `${usuarioLogado.nome}-${i}`;
+    const totalEmprestados = contarEmprestimos();
+
+    if (totalEmprestados >= 2) {
+      alert("Você já pegou o máximo de 2 livros.");
+      return;
     }
 
-    // Login
-    async function fazerLogin() {
-      const nome = document.getElementById('loginNome').value;
-      const nascimento = document.getElementById('loginDataNascimento').value;
-      const tipo = document.getElementById('loginTipo').value;
+    if (livros[i].estoque > 0 && !mapaDeEmprestimos[key]) {
+      livros[i].estoque--;
+      document.getElementById(`estoque-${i}`).innerText = livros[i].estoque;
+      const hoje = new Date();
+      const devolucao = new Date();
+      devolucao.setDate(hoje.getDate() + 15);
+      mapaDeEmprestimos[key] = {
+        dataEmprestimo: hoje,
+        dataDevolucao: devolucao,
+        renovado: false
+      };
+      alert(`${usuarioLogado.nome} pegou "${livros[i].titulo}" emprestado!\nData de devolução: ${devolucao.toLocaleDateString()}`);
+      document.getElementById(`renovar-${i}`).style.display = "inline-block";
+    } else if (mapaDeEmprestimos[key]) {
+      alert("Você já pegou esse livro.");
+    } else {
+      alert("Esse livro está esgotado no momento.");
+    }
+  }
 
-      if (!nome || !nascimento || !tipo) {
-        alert("Preencha todos os campos!");
-        return;
+  function renovarLivro(i) {
+    if (!usuarioLogado) return;
+    const key = `${usuarioLogado.nome}-${i}`;
+    const emprestimo = mapaDeEmprestimos[key];
+    if (emprestimo && !emprestimo.renovado) {
+      emprestimo.dataDevolucao.setDate(emprestimo.dataDevolucao.getDate() + 15);
+      emprestimo.renovado = true;
+      alert(`Renovação realizada!\nNova data de devolução: ${emprestimo.dataDevolucao.toLocaleDateString()}`);
+    } else {
+      alert("Você já renovou esse livro.");
+    }
+  }
+
+  function devolverLivro(i) {
+    if (!usuarioLogado) return;
+    const key = `${usuarioLogado.nome}-${i}`;
+    if (mapaDeEmprestimos[key]) {
+      livros[i].estoque++;
+      document.getElementById(`estoque-${i}`).innerText = livros[i].estoque;
+      delete mapaDeEmprestimos[key];
+      alert(`Livro devolvido com sucesso!`);
+      document.getElementById(`renovar-${i}`).style.display = "none";
+    } else {
+      alert("Você não pegou esse livro.");
+    }
+  }
+
+  function mostrarLivros() {
+    const vitrine = document.getElementById("vitrine");
+    const container = document.getElementById("livrosContainer");
+    vitrine.classList.remove("hidden");
+    container.innerHTML = "";
+
+    livros.forEach((livro, index) => {
+      const key = `${usuarioLogado?.nome}-${index}`;
+      const emprestado = mapaDeEmprestimos[key];
+      let diasRestantes = "";
+      let renovado = "";
+      let estiloEsgotado = "";
+
+      if (emprestado) {
+        const hoje = new Date();
+        const diff = Math.ceil((emprestado.dataDevolucao - hoje) / (1000 * 60 * 60 * 24));
+        diasRestantes = `<p style="color: #0f0;">Dias restantes: ${diff}</p>`;
+        if (emprestado.renovado) renovado = `<p style="color: #ff0;">(Renovado)</p>`;
       }
 
-      const senha = tipo === "admin" ? tipo : nascimento;
-
-      const query = await db.collection("usuarios")
-        .where("nome", "==", nome)
-        .where("senha", "==", senha)
-        .where("tipo", "==", tipo)
-        .get();
-
-      if (!query.empty) {
-        document.getElementById("login-section").classList.remove("active");
-        document.getElementById("livros-section").classList.add("active");
-        carregarLivros();
-      } else {
-        alert("Usuário não encontrado ou dados incorretos.");
+      if (livro.estoque === 0) {
+        estiloEsgotado = "opacity: 0.5;";
       }
-    }
 
-    // Carregar livros
-    async function carregarLivros() {
-      const container = document.getElementById("livrosContainer");
-      container.innerHTML = "";
+      const card = document.createElement("div");
+      card.className = "card";
+      if (livro.destaque) card.style.border = "2px solid red";
+      card.style = estiloEsgotado;
+      
+      card.innerHTML = `
+        ${livro.destaque ? '<div class="etiqueta-destaque">★ Destaque</div>' : ''}
+        <img src="imagens/${livro.imagem}" alt="${livro.titulo}" />
+        <h3>${livro.titulo}</h3>
+        <p><strong>${livro.autor}</strong></p>
+        <p class="sinopse">${livro.sinopse}</p>
+        <p class="estoque">Estoque: <span id="estoque-${index}">${livro.estoque}</span></p>
+        ${diasRestantes}
+        ${renovado}
+        <button class="btn-emprestar" onclick="emprestarLivro(${index})">Emprestar</button>
+        <button class="btn-devolver" onclick="devolverLivro(${index})">Devolver</button>
+        <button class="btn-renovar" id="renovar-${index}" onclick="renovarLivro(${index})" style="display:none; margin-top: 5px;">Renovar</button>
+      `;
 
-      const livros = await db.collection("livros").get();
-      livros.forEach(doc => {
-        const livro = doc.data();
-        const div = document.createElement("div");
-        div.classList.add("book-card");
-        if (livro.destaque) div.classList.add("highlight");
+      container.appendChild(card);
+    });
+  }
 
-        div.innerHTML = `
-          <img src="${livro.capa}" alt="${livro.nome}">
-          <div class="book-info">
-            <h4>${livro.nome}</h4>
-            <p><strong>Autor:</strong> ${livro.autor}</p>
-            <p>${livro.sinopse}</p>
-            <p><strong>Estoque:</strong> ${livro.estoque}</p>
-            <button onclick="emprestar('${doc.id}', ${livro.estoque})">Emprestar</button>
-            <button onclick="devolver('${doc.id}', ${livro.estoque})">Devolver</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
+  // Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBDx8P3EBS_PxulDBGLG03JYBztx2NsvXY",
+    authDomain: "bookflix-72bf6.firebaseapp.com",
+    databaseURL: "https://bookflix-72bf6-default-rtdb.firebaseio.com",
+    projectId: "bookflix-72bf6",
+    storageBucket: "bookflix-72bf6.firebasestorage.app",
+    messagingSenderId: "942375721594",
+    appId: "1:942375721594:web:95fcf3c05e5b7aeb3279c3"
+  };
 
-    // Emprestar livro
-    async function emprestar(id, estoque) {
-      if (estoque <= 0) {
-        alert("Livro esgotado!");
-        return;
-      }
-      await db.collection("livros").doc(id).update({
-        estoque: estoque - 1
-      });
-      carregarLivros();
-    }
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const estilo = document.createElement("style");
 
-    // Devolver livro
-    async function devolver(id, estoque) {
-      await db.collection("livros").doc(id).update({
-        estoque: estoque + 1
-      });
-      carregarLivros();
-    }
+estilo.textContent = `
+  .livro[data-destaque="true"] {
+    border: 3px solid #e50914;
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
+    transform: scale(1.02);
+    transition: all 0.3s ease-in-out;
+    background-color: rgba(255, 0, 0, 0.05);
+  }
+`;
+document.head.appendChild(estilo);
+  
+</script>
 
-    function logout() {
-      location.reload();
-    }
-  </script>
+  
+    
 </body>
 </html>
