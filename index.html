@@ -1,152 +1,265 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bookflix</title>
   <style>
-    /* Estilo geral com vibe Netflix */
+
+.etiqueta-destaque {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: red;
+    color: white;
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 4px;
+    z-index: 10;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  }
+
+  .card {
+    position: relative; /* Necessário pra posicionar a etiqueta */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #141414;
+    color: #fff;
+  }
+
+  header {
+    text-align: center;
+    padding: 20px 10px 10px;
+  }
+
+  .logo {
+    width: 150px;
+    border-radius: 10px;
+  }
+  
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #141414;
       color: #fff;
     }
 
     header {
-      background-color: #111;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header img {
-      height: 50px;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    .form-container, .book-section {
-      display: none;
-      margin-top: 20px;
-    }
-
-    .form-container.active, .book-section.active {
-      display: block;
-    }
-
-    input, select, button {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      width: 100%;
-      max-width: 300px;
-    }
-
-    button {
-      background-color: #e50914;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #f40612;
-    }
-
-    .book-row {
-      display: flex;
-      overflow-x: auto;
-      padding: 20px 0;
-      gap: 20px;
-    }
-
-    .book-card {
-      min-width: 200px;
-      background-color: #222;
-      padding: 10px;
-      border-radius: 10px;
       text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding: 20px 10px 10px;
     }
 
-    .book-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px #e50914;
-    }
-
-    .book-card img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
+    .logo {
+      width: 150px;
       border-radius: 10px;
-      transition: opacity 0.5s ease-in;
     }
 
-    .book-info {
+    .slogan {
+      font-size: 1.2rem;
       margin-top: 10px;
     }
 
-    .highlight {
-      border: 2px solid yellow;
+    .school {
+      font-size: 1rem;
+      color: #aaa;
+      margin-bottom: 10px;
     }
 
-    .warning {
-      color: orange;
+    .frase {
+      background-color: #222;
+      padding: 10px;
+      font-style: italic;
+      font-size: 1rem;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    form {
+      max-width: 300px;
+      margin: 20px auto;
+      background: #1c1c1c;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+
+    form button {
+      width: 100%;
+      padding: 10px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
       font-weight: bold;
     }
+
+    form a {
+      color: white;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    form a:hover {
+      color: #e50914;
+    }
+
+    .livros {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #1c1c1c;
+      padding: 15px;
+      border-radius: 10px;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+    }
+
+    .card .sinopse {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .card .estoque {
+      font-size: 0.9rem;
+      margin: 5px 0;
+    }
+
+    .card button {
+      width: 48%;
+      padding: 8px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-emprestar { background-color: #e50914; color: white; }
+    .btn-devolver { background-color: #444; color: white; }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+      padding: 20px 10px;
+      background: #0d0d0d;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .card img { height: 200px; }
+    }
+
+    /* Destaque visual para livros destacados */
+.livro[data-destaque="true"] {
+  border: 3px solid #e50914;
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
+  transform: scale(1.02);
+  transition: all 0.3s ease-in-out;
+  background-color: rgba(255, 0, 0, 0.05);
+}
   </style>
 </head>
 <body>
-
   <header>
-    <img src="imagens/logobookflix.jpeg" alt="Logo Bookflix">
-    <button onclick="logout()">Sair</button>
+
+    <img src="imagens/logobookflix.JPG" class="logo" alt="Logo Bookflix" />
+    <div class="slogan">Maratonando Livros</div>
+    <div class="school">CIEP BRIZOLÃO 183 - JOÃO VITTA</div>
+    <div class="frase" id="frase"></div>
+
+    <div class="container-voltar">
+      <button onclick="voltar()" class="btn-voltar">Voltar</button>
+  </div>
   </header>
 
-  <div class="container">
-    <!-- Tela de Login -->
-    <div id="login-section" class="form-container active">
-      <h2>Login</h2>
-      <input type="text" id="loginNome" placeholder="Nome completo">
-      <input type="date" id="loginDataNascimento">
-      <select id="loginTipo">
-        <option value="">Selecione o tipo</option>
-        <option value="aluno">Aluno</option>
-        <option value="professor">Professor</option>
-        <option value="admin">Administrador</option>
-      </select>
-      <button onclick="fazerLogin()">Entrar</button>
-      <p>Ainda não tem conta? <a href="#" onclick="mostrarCadastro()">Cadastre-se</a></p>
-    </div>
+  <main>
+    <!-- Login -->
+    <section id="login">
+      <form onsubmit="event.preventDefault(); fazerLogin()">
+        <h2>Login</h2>
+        <input type="text" id="loginNome" placeholder="Nome completo" required />
+        <input type="date" id="loginNascimento" required />
+        <button type="submit">Entrar</button>
+        <p style="text-align:center; margin-top:10px;">
+          <a onclick="mostrarCadastro()">Não tem cadastro? Clique aqui</a>
+        </p>
+      </form>
+    </section>
 
-    <!-- Tela de Cadastro -->
-    <div id="cadastro-section" class="form-container">
-      <h2>Cadastro</h2>
-      <input type="text" id="cadNome" placeholder="Nome completo">
-      <input type="date" id="cadNascimento">
-      <select id="cadTipo" onchange="mostrarCamposExtras()">
-        <option value="">Tipo de usuário</option>
-        <option value="aluno">Aluno</option>
-        <option value="professor">Professor</option>
-        <option value="admin">Administrador</option>
-      </select>
-      <input type="text" id="campoExtra" placeholder="Extra">
-      <button onclick="cadastrar()">Cadastrar</button>
-      <p>Já tem conta? <a href="#" onclick="mostrarLogin()">Fazer login</a></p>
-    </div>
+    <!-- Cadastro -->
+    <section id="cadastro" class="hidden">
+      <form onsubmit="event.preventDefault(); fazerCadastro()">
+        <h2>Cadastro</h2>
+        <input type="text" id="cadNome" placeholder="Nome completo" required />
+        <input type="date" id="cadNascimento" required />
+        <select id="cadTipo" required>
+          <option value="">Você é...</option>
+          <option value="aluno">Aluno</option>
+          <option value="professor">Professor</option>
+          <option value="admin">Administrador</option>
+        </select>
+        <button type="submit">Cadastrar</button>
+        <p style="text-align:center; margin-top:10px;">
+          <a onclick="mostrarLogin()">Já tem cadastro? Voltar ao login</a>
+        </p>
+      </form>
+    </section>
 
-    <!-- Vitrine de livros -->
-    <div id="livros-section" class="book-section">
-      <h2>Vitrine de Livros</h2>
-      <div class="book-row" id="livrosContainer">
-        <!-- Livros serão inseridos aqui -->
-      </div>
-    </div>
-  </div>
+    <!-- Livros -->
+    <section id="vitrine" class="hidden">
+      <h2 style="text-align:center;">Livros disponíveis</h2>
+      <div class="livros" id="livrosContainer"></div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Mônica Lima<br/>
+    Animação Cultural
+  </footer>
+
+
 
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
