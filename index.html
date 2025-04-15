@@ -1,334 +1,290 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Bookflix</title>
   <style>
-
-.etiqueta-destaque {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background-color: red;
-    color: white;
-    padding: 4px 8px;
-    font-weight: bold;
-    font-size: 12px;
-    border-radius: 4px;
-    z-index: 10;
-    box-shadow: 0 0 5px rgba(0,0,0,0.3);
-  }
-
-  .card {
-    position: relative; /* Necessário pra posicionar a etiqueta */
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #141414;
-    color: #fff;
-  }
-
-  header {
-    text-align: center;
-    padding: 20px 10px 10px;
-  }
-
-  .logo {
-    width: 150px;
-    border-radius: 10px;
-  }
-  
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* Estilo geral com vibe Netflix */
     body {
-      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      font-family: Arial, sans-serif;
       background-color: #141414;
       color: #fff;
     }
 
     header {
-      text-align: center;
-      padding: 20px 10px 10px;
+      background-color: #111;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .logo {
-      width: 150px;
-      border-radius: 10px;
+    header img {
+      height: 50px;
     }
 
-    .slogan {
-      font-size: 1.2rem;
-      margin-top: 10px;
-    }
-
-    .school {
-      font-size: 1rem;
-      color: #aaa;
-      margin-bottom: 10px;
-    }
-
-    .frase {
-      background-color: #222;
-      padding: 10px;
-      font-style: italic;
-      font-size: 1rem;
-      animation: fadeIn 1s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    main {
+    .container {
       padding: 20px;
     }
 
-    .hidden {
+    .form-container, .book-section {
       display: none;
+      margin-top: 20px;
     }
 
-    form {
-      max-width: 300px;
-      margin: 20px auto;
-      background: #1c1c1c;
-      padding: 20px;
-      border-radius: 10px;
+    .form-container.active, .book-section.active {
+      display: block;
     }
 
-    form input, form select {
-      width: 100%;
-      padding: 10px;
+    input, select, button {
+      display: block;
       margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-    }
-
-    form button {
-      width: 100%;
       padding: 10px;
-      background: red;
-      color: white;
       border: none;
       border-radius: 5px;
-      font-weight: bold;
+      width: 100%;
+      max-width: 300px;
     }
 
-    form a {
+    button {
+      background-color: #e50914;
       color: white;
-      text-decoration: underline;
       cursor: pointer;
     }
 
-    form a:hover {
-      color: #e50914;
+    button:hover {
+      background-color: #f40612;
     }
 
-        }
-        .vitrine {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-            padding: 20px;
-            margin-bottom: 40px;
-        }
-        .livro {
-            background-color: #222;
-            border-radius: 8px;
-            overflow: hidden;
-            text-align: center;
-            color: #fff;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .livro:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-        }
-        .livro img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .livro p {
-            padding: 10px;
-            font-size: 14px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        .livro .button {
-            background-color: #e50914;
-            padding: 12px;
-            margin: 5px;
-            width: 90%;
-            border: none;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .livro .button:hover {
-            background-color: #b81d16;
-        }
-        .form-link {
-            color: #e50914;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .form-link:hover {
-            color: #b81d16;
-        }
-    </style>
+    .book-row {
+      display: flex;
+      overflow-x: auto;
+      padding: 20px 0;
+      gap: 20px;
+    }
+
+    .book-card {
+      min-width: 200px;
+      background-color: #222;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .book-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #e50914;
+    }
+
+    .book-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 10px;
+      transition: opacity 0.5s ease-in;
+    }
+
+    .book-info {
+      margin-top: 10px;
+    }
+
+    .highlight {
+      border: 2px solid yellow;
+    }
+
+    .warning {
+      color: orange;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
 
-<img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/logobookflix.jpeg" alt="Logo Bookflix" class="logo">
+  <header>
+    <img src="imagens/logobookflix.jpeg" alt="Logo Bookflix">
+    <button onclick="logout()">Sair</button>
+  </header>
 
-<div class="container">
-    <h1>Bookflix</h1>
-  <!-- Formulário de login -->
-  <div id="loginForm">
-    <input type="text" id="loginName" placeholder="Nome" required>
-    <input type="date" id="loginDob" required>
-    <button onclick="loginUser()">Entrar</button>
-    <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegisterForm()">Cadastre-se</a></p>
-    <p class="error" id="loginError"></p>
+  <div class="container">
+    <!-- Tela de Login -->
+    <div id="login-section" class="form-container active">
+      <h2>Login</h2>
+      <input type="text" id="loginNome" placeholder="Nome completo">
+      <input type="date" id="loginDataNascimento">
+      <select id="loginTipo">
+        <option value="">Selecione o tipo</option>
+        <option value="aluno">Aluno</option>
+        <option value="professor">Professor</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <button onclick="fazerLogin()">Entrar</button>
+      <p>Ainda não tem conta? <a href="#" onclick="mostrarCadastro()">Cadastre-se</a></p>
+    </div>
+
+    <!-- Tela de Cadastro -->
+    <div id="cadastro-section" class="form-container">
+      <h2>Cadastro</h2>
+      <input type="text" id="cadNome" placeholder="Nome completo">
+      <input type="date" id="cadNascimento">
+      <select id="cadTipo" onchange="mostrarCamposExtras()">
+        <option value="">Tipo de usuário</option>
+        <option value="aluno">Aluno</option>
+        <option value="professor">Professor</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <input type="text" id="campoExtra" placeholder="Extra">
+      <button onclick="cadastrar()">Cadastrar</button>
+      <p>Já tem conta? <a href="#" onclick="mostrarLogin()">Fazer login</a></p>
+    </div>
+
+    <!-- Vitrine de livros -->
+    <div id="livros-section" class="book-section">
+      <h2>Vitrine de Livros</h2>
+      <div class="book-row" id="livrosContainer">
+        <!-- Livros serão inseridos aqui -->
+      </div>
+    </div>
   </div>
 
-  <!-- Formulário de cadastro -->
-  <div id="registerForm" style="display:none;">
-    <input type="text" id="registerName" placeholder="Nome" required>
-    <input type="date" id="registerDob" required>
-    <select id="userType">
-      <option value="aluno">Aluno</option>
-      <option value="professor">Professor</option>
-      <option value="administrador">Administrador</option>
-    </select>
-    <button onclick="registerUser()">Cadastrar</button>
-    <p>Já tem uma conta? <a href="javascript:void(0)" onclick="showLoginForm()">Faça login</a></p>
-    <p class="error" id="registerError"></p>
-  </div>
-</div>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
-<!-- Vitrine de Livros -->
-<div class="vitrine" id="livrosVitrine" style="display:none;">
-  <h1>Vitrine de Livros</h1>
-  <div id="loadingSpinner" class="spinner" style="display:none;"></div>
-</div>
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBDx8P3EBS_PxulDBGLG03JYBztx2NsvXY",
+      authDomain: "bookflix-72bf6.firebaseapp.com",
+      databaseURL: "https://bookflix-72bf6-default-rtdb.firebaseio.com",
+      projectId: "bookflix-72bf6",
+      storageBucket: "bookflix-72bf6.firebasestorage.app",
+      messagingSenderId: "942375721594",
+      appId: "1:942375721594:web:95fcf3c05e5b7aeb3279c3"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAphtPredq1GUdCroaxJe9eyWRfLy27mpE",
-    authDomain: "bookflix-39406.firebaseapp.com",
-    projectId: "bookflix-39406",
-    storageBucket: "bookflix-39406.appspot.com",
-    messagingSenderId: "222500839972",
-    appId: "1:222500839972:web:50f8eb1c7785cdbada2eb1"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  window.showRegisterForm = function () {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('registerForm').style.display = 'block';
-  };
-
-  window.showLoginForm = function () {
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('registerForm').style.display = 'none';
-  };
-
-  window.loginUser = async function () {
-    const name = document.getElementById('loginName').value;
-    const dob = document.getElementById('loginDob').value;
-
-    if (!name || !dob) {
-      document.getElementById('loginError').innerText = "Por favor, preencha todos os campos!";
-      return;
+    // Mostrar seções
+    function mostrarCadastro() {
+      document.getElementById('login-section').classList.remove('active');
+      document.getElementById('cadastro-section').classList.add('active');
     }
 
-    // Consulta para buscar usuário pelo nome e data de nascimento
-    const usersRef = collection(db, "users");
-    const q = query(usersRef, where("name", "==", name), where("dob", "==", dob));
-    
-    try {
-      const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        alert("Login bem-sucedido!");
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('livrosVitrine').style.display = 'block';
-        loadBooks();
-      } else {
-        document.getElementById('loginError').innerText = "Usuário não encontrado.";
+    function mostrarLogin() {
+      document.getElementById('cadastro-section').classList.remove('active');
+      document.getElementById('login-section').classList.add('active');
+    }
+
+    function mostrarCamposExtras() {
+      const tipo = document.getElementById('cadTipo').value;
+      const campo = document.getElementById('campoExtra');
+      if (tipo === "aluno") campo.placeholder = "Turma";
+      else if (tipo === "professor") campo.placeholder = "Disciplina";
+      else if (tipo === "admin") campo.placeholder = "Senha do cargo";
+      campo.style.display = tipo ? 'block' : 'none';
+    }
+
+    // Cadastro
+    async function cadastrar() {
+      const nome = document.getElementById('cadNome').value;
+      const nascimento = document.getElementById('cadNascimento').value;
+      const tipo = document.getElementById('cadTipo').value;
+      const extra = document.getElementById('campoExtra').value;
+
+      if (!nome || !nascimento || !tipo) {
+        alert("Preencha todos os campos.");
+        return;
       }
-    } catch (error) {
-      document.getElementById('loginError').innerText = "Erro ao buscar usuário: " + error.message;
-    }
-  };
 
-  window.registerUser = async function () {
-    const name = document.getElementById('registerName').value;
-    const dob = document.getElementById('registerDob').value;
-    const userType = document.getElementById('userType').value;
+      const senha = tipo === "admin" ? extra : nascimento;
 
-    if (!name || !dob || !userType) {
-      document.getElementById('registerError').innerText = 'Preencha todos os campos';
-      return;
-    }
-
-    // Remove espaços e deixa o nome minúsculo para criar um "email" válido
-    const safeName = name.toLowerCase().replace(/\s+/g, '');
-    const email = safeName + '@bookflix.com';
-    const password = userType === 'administrador' ? 'adminPassword' : dob;
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      await addDoc(collection(db, 'users'), {
-        name: name,
-        dob: dob,
-        type: userType,
-        uid: user.uid
+      await db.collection("usuarios").add({
+        nome, nascimento, tipo, senha, extra
       });
 
       alert("Cadastro realizado com sucesso!");
-      showLoginForm();
-    } catch (error) {
-      document.getElementById('registerError').innerText = error.message;
+      mostrarLogin();
     }
-  };
 
-  async function loadBooks() {
-    document.getElementById('loadingSpinner').style.display = 'block';
-    const livrosRef = collection(db, 'livros');
-    const snapshot = await getDocs(livrosRef);
-    const livrosContainer = document.getElementById('livrosVitrine');
+    // Login
+    async function fazerLogin() {
+      const nome = document.getElementById('loginNome').value;
+      const nascimento = document.getElementById('loginDataNascimento').value;
+      const tipo = document.getElementById('loginTipo').value;
 
-    snapshot.forEach((doc) => {
-      const livroData = doc.data();
-      const livroElement = document.createElement('div');
-      livroElement.classList.add('livro');
-      livroElement.innerHTML = `
-        <img src="${livroData.capa}" alt="${livroData.nome}">
-        <p>${livroData.nome}</p>
-        <button class="button">Emprestar</button>
-      `;
-      livrosContainer.appendChild(livroElement);
-    });
+      if (!nome || !nascimento || !tipo) {
+        alert("Preencha todos os campos!");
+        return;
+      }
 
-    document.getElementById('loadingSpinner').style.display = 'none';
-  }
-</script>
+      const senha = tipo === "admin" ? tipo : nascimento;
 
+      const query = await db.collection("usuarios")
+        .where("nome", "==", nome)
+        .where("senha", "==", senha)
+        .where("tipo", "==", tipo)
+        .get();
 
+      if (!query.empty) {
+        document.getElementById("login-section").classList.remove("active");
+        document.getElementById("livros-section").classList.add("active");
+        carregarLivros();
+      } else {
+        alert("Usuário não encontrado ou dados incorretos.");
+      }
+    }
+
+    // Carregar livros
+    async function carregarLivros() {
+      const container = document.getElementById("livrosContainer");
+      container.innerHTML = "";
+
+      const livros = await db.collection("livros").get();
+      livros.forEach(doc => {
+        const livro = doc.data();
+        const div = document.createElement("div");
+        div.classList.add("book-card");
+        if (livro.destaque) div.classList.add("highlight");
+
+        div.innerHTML = `
+          <img src="${livro.capa}" alt="${livro.nome}">
+          <div class="book-info">
+            <h4>${livro.nome}</h4>
+            <p><strong>Autor:</strong> ${livro.autor}</p>
+            <p>${livro.sinopse}</p>
+            <p><strong>Estoque:</strong> ${livro.estoque}</p>
+            <button onclick="emprestar('${doc.id}', ${livro.estoque})">Emprestar</button>
+            <button onclick="devolver('${doc.id}', ${livro.estoque})">Devolver</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Emprestar livro
+    async function emprestar(id, estoque) {
+      if (estoque <= 0) {
+        alert("Livro esgotado!");
+        return;
+      }
+      await db.collection("livros").doc(id).update({
+        estoque: estoque - 1
+      });
+      carregarLivros();
+    }
+
+    // Devolver livro
+    async function devolver(id, estoque) {
+      await db.collection("livros").doc(id).update({
+        estoque: estoque + 1
+      });
+      carregarLivros();
+    }
+
+    function logout() {
+      location.reload();
+    }
+  </script>
 </body>
 </html>
