@@ -6,103 +6,133 @@
   <title>Bookflix - Login / Cadastro</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #141414;
-      color: #fff;
-      margin: 0;
-      padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #141414;
+        color: #fff;
+        margin: 0;
+        padding: 0;
     }
     .container {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #222;
-      border-radius: 8px;
-      margin-top: 50px;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #222;
+        border-radius: 8px;
+        margin-top: 50px;
     }
     h1 {
-      text-align: center;
-      font-size: 24px;
+        text-align: center;
+        font-size: 24px;
     }
     .logo {
-      display: block;
-      margin: 0 auto 20px;
-      max-width: 100%;
-      height: auto;
+        display: block;
+        margin: 0 auto 20px;
+        max-width: 100%;
+        height: auto;
     }
     input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      background-color: #333;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 4px;
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #333;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 4px;
     }
     button {
-      width: 100%;
-      padding: 10px;
-      background-color: #e50914;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+        width: 100%;
+        padding: 10px;
+        background-color: #e50914;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
     button:hover {
-      background-color: #b81d16;
+        background-color: #b81d16;
     }
     .error {
-      color: red;
-      text-align: center;
+        color: red;
+        text-align: center;
     }
-
-    /* Estilo do carrossel */
     .vitrine {
-      display: flex;
-      overflow-x: auto;
-      margin-top: 20px;
-      padding-bottom: 20px;
-      scroll-snap-type: x mandatory;
-      gap: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
     }
     .livro {
-      background-color: #222;
-      margin: 10px;
-      border-radius: 8px;
-      overflow: hidden;
-      text-align: center;
-      color: #fff;
-      scroll-snap-align: center;
-      width: 150px;
+        background-color: #222;
+        width: 150px;
+        margin: 10px;
+        border-radius: 8px;
+        overflow: hidden;
+        text-align: center;
+        color: #fff;
     }
     .livro img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
     }
     .livro p {
-      padding: 10px;
-      font-size: 14px;
+        padding: 10px;
+        font-size: 14px;
     }
     .livro .button {
-      background-color: #e50914;
-      padding: 10px;
-      margin: 5px;
-      width: 90%;
-      border: none;
-      color: white;
-      cursor: pointer;
+        background-color: #e50914;
+        padding: 10px;
+        margin: 5px;
+        width: 90%;
+        border: none;
+        color: white;
+        cursor: pointer;
     }
     .livro .button:hover {
-      background-color: #b81d16;
+        background-color: #b81d16;
+    }
+    /* Carrossel */
+    .carrossel-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+    .carrossel {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+    }
+    .livro {
+        flex: 0 0 auto;
+        width: 200px;
+    }
+    .carrossel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 10;
+    }
+    .carrossel-button-left {
+        left: 10px;
+    }
+    .carrossel-button-right {
+        right: 10px;
     }
   </style>
 </head>
 <body>
-  <button onclick="adicionarAdministrador()">Criar Admin</button>
+  <!-- Criar Admin Button -->
+  <button onclick="adicionarAdministrador()" style="position: fixed; top: 20px; right: 20px; background-color: #e50914; padding: 10px; border-radius: 4px; color: white;">Criar Admin</button>
+
+  <!-- Logo -->
   <img src="https://raw.githubusercontent.com/acmonicalima/bookflix/main/logobookflix.jpeg" alt="Logo Bookflix" class="logo">
 
+  <!-- Container Login / Cadastro -->
   <div class="container">
     <h1>Login / Cadastro</h1>
 
@@ -134,9 +164,15 @@
   <div class="vitrine" id="livrosVitrine" style="display:none;">
     <h1>Vitrine de Livros</h1>
     <div id="loadingSpinner" class="spinner" style="display:none;"></div>
+
+    <div class="carrossel-container">
+      <button class="carrossel-button carrossel-button-left" onclick="moveCarrossel(-1)">&#10094;</button>
+      <div id="livrosCarrossel" class="carrossel"></div>
+      <button class="carrossel-button carrossel-button-right" onclick="moveCarrossel(1)">&#10095;</button>
+    </div>
   </div>
 
-  <!-- configuração firebase -->
+  <!-- Configuração Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
@@ -155,6 +191,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Funções de login e cadastro
     window.showRegisterForm = function () {
       document.getElementById('loginForm').style.display = 'none';
       document.getElementById('registerForm').style.display = 'block';
@@ -168,7 +205,6 @@
     window.loginUser = async function () {
       const name = document.getElementById('loginName').value;
       const dob = document.getElementById('loginDob').value;
-
       if (!name || !dob) {
         document.getElementById('loginError').innerText = "Por favor, preencha todos os campos!";
         return;
@@ -176,7 +212,6 @@
 
       const usersRef = collection(db, "users");
       const q = query(usersRef, where("name", "==", name), where("dob", "==", dob));
-
       try {
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
@@ -203,61 +238,47 @@
       }
 
       const safeName = name.toLowerCase().replace(/\s+/g, '');
-      const email = safeName + '@bookflix.com';
-      const password = userType === 'administrador' ? 'adminPassword' : dob;
-
+      const safeDob = dob.replace(/\D/g, ''); // Remove todos caracteres não numéricos
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        await addDoc(collection(db, "users"), {
+          name: safeName,
+          dob: safeDob,
+          userType: userType,
+        });
+        alert('Usuário cadastrado com sucesso!');
+        showLoginForm();
+      } catch (e) {
+        document.getElementById('registerError').innerText = "Erro ao cadastrar: " + e.message;
+      }
+    };
 
-        await addDoc(collection(db, 'users'), {
+    window.adicionarAdministrador = function () {
+      const name = prompt('Nome do novo administrador:');
+      const dob = prompt('Data de nascimento do administrador:');
+      if (name && dob) {
+        addDoc(collection(db, "users"), {
           name: name,
           dob: dob,
-          type: userType,
-          uid: user.uid
+          userType: "administrador",
+        }).then(() => {
+          alert("Administrador criado com sucesso.");
+        }).catch((error) => {
+          alert("Erro ao criar administrador: " + error.message);
         });
-
-        alert("Cadastro realizado com sucesso!");
-        showLoginForm();
-      } catch (error) {
-        document.getElementById('registerError').innerText = error.message;
+      } else {
+        alert('Nome e data de nascimento são obrigatórios!');
       }
     };
 
-    async function loadBooks() {
-      document.getElementById('loadingSpinner').style.display = 'block';
-      const livrosRef = collection(db, 'livros');
-      const snapshot = await getDocs(livrosRef);
-      const livrosContainer = document.getElementById('livrosVitrine');
-
-      snapshot.forEach((doc) => {
-        const livroData = doc.data();
-        const livroElement = document.createElement('div');
-        livroElement.classList.add('livro');
-        livroElement.innerHTML = `
-          <img src="${livroData.capa}" alt="${livroData.nome}">
-          <p>${livroData.nome}</p>
-          <button class="button">Emprestar</button>
-        `;
-        livrosContainer.appendChild(livroElement);
-      });
-
-      document.getElementById('loadingSpinner').style.display = 'none';
+    function loadBooks() {
+      // Implementar o código para carregar os livros aqui
     }
 
-    window.adicionarAdministrador = async function () {
-      try {
-        await addDoc(collection(db, "administradores"), {
-          nome: "João Silva",
-          dataNascimento: "1980-12-15",
-          senha: "admin123",
-          tipo: "admin"
-        });
-        alert('Administrador adicionado com sucesso!');
-      } catch (error) {
-        console.error('Erro ao adicionar administrador: ', error);
-      }
-    };
+    function moveCarrossel(direction) {
+      const carrossel = document.getElementById('livrosCarrossel');
+      const carrosselWidth = carrossel.offsetWidth;
+      carrossel.style.transform = `translateX(${parseInt(carrossel.style.transform.replace('translateX(', '').replace('px)', '')) + direction * carrosselWidth}px)`;
+    }
   </script>
 </body>
 </html>
