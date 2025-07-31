@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bookflix - Maratonando Livros</title>
-
   <style>
     /* (mantive o CSS igual ao seu original) */
     body {
@@ -14,18 +13,15 @@
       padding: 0;
       color: #fff;
     }
-
     header {
       background-color: #111;
       padding: 20px;
       text-align: center;
       font-size: 24px;
     }
-
     h1 {
       margin: 0;
     }
-
     .livros-container {
       display: flex;
       flex-wrap: wrap;
@@ -33,7 +29,6 @@
       gap: 20px;
       padding: 20px;
     }
-
     .livro {
       position: relative;
       width: 200px;
@@ -43,35 +38,29 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .livro:hover {
       transform: scale(1.05);
       box-shadow: 0 8px 15px rgb(250, 250, 250);
     }
-
     .livro img {
       width: 100%;
       height: auto;
       border-radius: 8px;
       transition: transform 0.3s ease;
     }
-
     .livro:hover img {
       transform: scale(1.1);
     }
-
     .livro .titulo {
       padding: 10px;
       font-size: 16px;
       font-weight: bold;
       text-align: center;
     }
-
     .livro p {
       padding: 0 10px;
       font-size: 14px;
     }
-
     .acao {
       background-color: #e50914;
       color: #fff;
@@ -85,26 +74,21 @@
       text-align: center;
       transition: background-color 0.3s ease;
     }
-
     .acao:hover {
       background-color: #f40612;
     }
-
     .destaque {
       border: 3px solid #f5f102;
     }
-
     .esgotado {
       background-color: #444;
       color: #888;
       pointer-events: none;
     }
-
     .esgotado .acao {
       background-color: #777;
       cursor: not-allowed;
     }
-
     #mensagem {
       display: none;
       text-align: center;
@@ -123,21 +107,17 @@
       opacity: 0;
       animation: fadeIn 0.5s forwards;
     }
-
     .mensagem-titulo {
       font-weight: bold;
       font-size: 18px;
     }
-
     .mensagem-data {
       font-size: 14px;
     }
-
     @keyframes fadeIn {
       0% { opacity: 0; }
       100% { opacity: 1; }
     }
-
     #livros-top-bar {
       background-color: #111;
       color: #fff;
@@ -150,7 +130,6 @@
       z-index: 999;
       display: none;
     }
-
     .loading-spinner {
       border: 4px solid #f3f3f3;
       border-top: 4px solid #e50914;
@@ -159,14 +138,12 @@
       height: 30px;
       animation: spin 2s linear infinite;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
   </style>
 </head>
-
 <body>
   <header>
     <img src="https://i.imgur.com/XH8khch.png" alt="Logo Bookflix" style="height: 80px;">
@@ -174,32 +151,26 @@
     <p>CIEP BRIZOLÃO 183 - JOÃO VITTA</p>
     <p>SALA DE LEITURA</p>
   </header>
-
   <div id="livros-top-bar">Você já PEGOU <span id="livros-contagem">0</span> livros!</div>
-
   <div id="livros-container" class="livros-container">
     <div class="loading-spinner" id="loading-spinner"></div>
     <p id="loading-text">Carregando livros...</p>
   </div>
-
   <div id="mensagem">
     <p class="mensagem-titulo">Livro solicitado:</p>
     <p id="livro-titulo" class="mensagem-titulo"></p>
     <p id="data-devolucao" class="mensagem-data"></p>
   </div>
-
   <footer style="text-align: center; padding: 20px; color: white; font-size: 14px;">
     <div style="display: inline-flex; align-items: center; gap: 8px;">
       <div style="width: 18px; height: 18px; border-radius: 50%; background-color: white; color: black; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 12px;">X</div>
       <span>CTRL X - ARTE DIGITAL</span>
     </div>
   </footer>
-
   <!-- IMPORTAÇÕES CORRETAS DO FIREBASE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
     const firebaseConfig = {
       apiKey: "AIzaSyCGS2SyAbaOSARjQtla5FafoxTp-3PMTFY",
       authDomain: "cadbookflix.firebaseapp.com",
@@ -208,18 +179,14 @@
       messagingSenderId: "197362231087",
       appId: "1:197362231087:web:224d7100f454968224a3da"
     };
-
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
     const diasDevolucao = 15;
-
     function calcularDataDevolucao(dias) {
       const data = new Date();
       data.setDate(data.getDate() + dias);
       return data.toISOString().split('T')[0];
     }
-
     async function carregarLivros() {
       const API_KEY = 'AIzaSyBOn_Rdei572RXuroQDGXigntO8ypy7Hfo';
       const SPREADSHEET_ID = '1Cj7CHEVYS6BqziFwTsPWfxWeqnrmRvnK7-GyLeu7_1w';
@@ -230,7 +197,6 @@
       container.innerHTML = '';
       loadingSpinner.style.display = 'block';
       loadingText.style.display = 'block';
-
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -238,14 +204,11 @@
           container.innerHTML = '<p>Nenhum livro encontrado.</p>';
           return;
         }
-
         loadingSpinner.style.display = 'none';
         loadingText.style.display = 'none';
-
         data.values.forEach((livro) => {
           const [titulo, autor, capa, estoque, sinopse, destaque] = livro;
           if (!titulo || !autor || !capa || estoque === undefined || !sinopse) return;
-
           const div = document.createElement('div');
           div.classList.add('livro');
           if (destaque === 'S') div.classList.add('destaque');
@@ -261,14 +224,12 @@
           `;
           container.appendChild(div);
         });
-
         aplicarFuncionalidades();
       } catch (error) {
         console.error('Erro ao carregar livros:', error);
         container.innerHTML = '<p>Erro ao carregar livros. Verifique sua conexão.</p>';
       }
     }
-
     function aplicarFuncionalidades() {
       document.querySelectorAll('.quero').forEach(btn => {
         btn.addEventListener('click', async () => {
@@ -280,10 +241,8 @@
           if (!tipoUsuario) return;
           const turma = prompt("Digite sua turma ou disciplina:");
           if (!turma) return;
-
           const dataEmprestimo = new Date().toISOString().split('T')[0];
           const dataDevolucao = calcularDataDevolucao(diasDevolucao);
-
           const emprestimo = {
             livro: titulo,
             usuario,
@@ -293,7 +252,6 @@
             dataDevolucao,
             status: "pendente"
           };
-
           try {
             const docRef = await addDoc(collection(db, 'emprestimos'), emprestimo);
             console.log("Empréstimo registrado com ID: ", docRef.id);
@@ -303,7 +261,6 @@
           }
         });
       });
-
       document.querySelectorAll('.devolvendo').forEach(btn => {
         btn.addEventListener('click', async () => {
           const livroElement = btn.closest('.livro');
@@ -313,13 +270,11 @@
             alert("O nome do usuário é obrigatório para a devolução.");
             return;
           }
-
           const devolucao = {
             livro: titulo,
             usuario,
             dataDevolucao: new Date().toISOString().split('T')[0]
           };
-
           try {
             const docRef = await addDoc(collection(db, 'devolucao'), devolucao);
             console.log("Devolução registrada com ID: ", docRef.id);
@@ -331,7 +286,6 @@
         });
       });
     }
-
     function mostrarMensagem(titulo, dataDevolucao) {
       const mensagem = document.getElementById('mensagem');
       document.getElementById('livro-titulo').innerText = titulo;
@@ -343,7 +297,6 @@
         setTimeout(() => mensagem.style.display = 'none', 500);
       }, 5000);
     }
-
     carregarLivros();
   </script>
 </body>
