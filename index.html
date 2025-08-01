@@ -1,203 +1,303 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bookflix - Maratonando Livros</title>
   <style>
+    /* (mantive o CSS igual ao seu original) */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #fdfcfb;
+      font-family: 'Arial', sans-serif;
+      background-color: #141414;
       margin: 0;
       padding: 0;
+      color: #fff;
     }
-
     header {
-      background-color: #8b0000;
-      color: white;
-      padding: 1rem;
+      background-color: #111;
+      padding: 20px;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 24px;
     }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
+    h1 {
+      margin: 0;
     }
-
+    .livros-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
     .livro {
-      background-color: white;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+      width: 200px;
+      margin: 15px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
+    .livro:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 15px rgb(250, 250, 250);
+    }
     .livro img {
       width: 100%;
       height: auto;
-      border-radius: 4px;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
     }
-
-    .livro h3 {
-      margin: 0.5rem 0 0.2rem;
-      font-size: 1.1rem;
+    .livro:hover img {
+      transform: scale(1.1);
     }
-
-    .livro button {
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      width: 100%;
+    .livro .titulo {
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .livro p {
+      padding: 0 10px;
+      font-size: 14px;
+    }
+    .acao {
+      background-color: #e50914;
+      color: #fff;
       border: none;
-      background-color: #8b0000;
-      color: white;
-      border-radius: 4px;
+      padding: 10px;
+      width: 100%;
       cursor: pointer;
+      font-size: 14px;
+      border-radius: 0 0 10px 10px;
+      display: block;
+      text-align: center;
+      transition: background-color 0.3s ease;
     }
-
-    .livro button:hover {
-      background-color: #a30000;
+    .acao:hover {
+      background-color: #f40612;
     }
-
+    .destaque {
+      border: 3px solid #f5f102;
+    }
+    .esgotado {
+      background-color: #444;
+      color: #888;
+      pointer-events: none;
+    }
+    .esgotado .acao {
+      background-color: #777;
+      cursor: not-allowed;
+    }
     #mensagem {
       display: none;
+      text-align: center;
+      padding: 20px;
+      background-color: #111;
+      color: #fff;
+      border-radius: 10px;
+      margin-top: 20px;
       position: fixed;
-      bottom: 20px;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      background: #dff0d8;
-      color: #3c763d;
-      padding: 1rem;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      transform: translate(-50%, -50%);
+      width: 300px;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
     }
-
-    @media (max-width: 480px) {
-      .livro h3 {
-        font-size: 1rem;
-      }
-
-      .livro button {
-        font-size: 0.9rem;
-      }
+    .mensagem-titulo {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .mensagem-data {
+      font-size: 14px;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    #livros-top-bar {
+      background-color: #111;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 16px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      display: none;
+    }
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #e50914;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <header>📚 Bookflix - Maratonando Livros</header>
-
-  <div class="grid-container" id="livros-container"></div>
-
-  <div id="mensagem">
-    <strong id="livro-titulo"></strong><br>
-    <span id="data-devolucao"></span>
+  <header>
+    <img src="https://i.imgur.com/XH8khch.png" alt="Logo Bookflix" style="height: 80px;">
+    <h1>Bookflix - Maratonando Livros</h1>
+    <p>CIEP BRIZOLÃO 183 - JOÃO VITTA</p>
+    <p>SALA DE LEITURA</p>
+  </header>
+  <div id="livros-top-bar">Você já PEGOU <span id="livros-contagem">0</span> livros!</div>
+  <div id="livros-container" class="livros-container">
+    <div class="loading-spinner" id="loading-spinner"></div>
+    <p id="loading-text">Carregando livros...</p>
   </div>
-
-  <!-- Firebase -->
+  <div id="mensagem">
+    <p class="mensagem-titulo">Livro solicitado:</p>
+    <p id="livro-titulo" class="mensagem-titulo"></p>
+    <p id="data-devolucao" class="mensagem-data"></p>
+  </div>
+  <footer style="text-align: center; padding: 20px; color: white; font-size: 14px;">
+    <div style="display: inline-flex; align-items: center; gap: 8px;">
+      <div style="width: 18px; height: 18px; border-radius: 50%; background-color: white; color: black; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 12px;">X</div>
+      <span>CTRL X - ARTE DIGITAL</span>
+    </div>
+  </footer>
+  <!-- IMPORTAÇÕES CORRETAS DO FIREBASE -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore, collection, addDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
     const firebaseConfig = {
-      apiKey: "AIzaSyDtqP_gZ3wMAnVgBhCFUklqY7UWuXcRfGo",
-      authDomain: "motivame-c2d22.firebaseapp.com",
-      projectId: "motivame-c2d22",
-      storageBucket: "motivame-c2d22.appspot.com",
-      messagingSenderId: "959789889783",
-      appId: "1:959789889783:web:9cc46a5e79a4714c123bf2"
+      apiKey: "AIzaSyCGS2SyAbaOSARjQtla5FafoxTp-3PMTFY",
+      authDomain: "cadbookflix.firebaseapp.com",
+      projectId: "cadbookflix",
+      storageBucket: "cadbookflix.firebasestorage.app",
+      messagingSenderId: "197362231087",
+      appId: "1:197362231087:web:224d7100f454968224a3da"
     };
-
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    // Puxa livros de uma planilha pública do Google Sheets convertida para JSON via Sheets API
+    const diasDevolucao = 15;
+    function calcularDataDevolucao(dias) {
+      const data = new Date();
+      data.setDate(data.getDate() + dias);
+      return data.toISOString().split('T')[0];
+    }
     async function carregarLivros() {
+      const API_KEY = 'AIzaSyBOn_Rdei572RXuroQDGXigntO8ypy7Hfo';
+      const SPREADSHEET_ID = '1Cj7CHEVYS6BqziFwTsPWfxWeqnrmRvnK7-GyLeu7_1w';
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/A2:F?key=${API_KEY}`;
+      const container = document.getElementById('livros-container');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      const loadingText = document.getElementById('loading-text');
+      container.innerHTML = '';
+      loadingSpinner.style.display = 'block';
+      loadingText.style.display = 'block';
       try {
-        const response = await fetch("https://opensheet.elk.sh/1Qf9ClZneI3zkYgCEWp8Xwnal5qGpJgnPQBStCpcpwXI/livros");
-        const livros = await response.json();
-        const container = document.getElementById("livros-container");
-
-        livros.forEach(livro => {
-          const card = document.createElement("div");
-          card.className = "livro";
-          card.innerHTML = `
-            <img src="${livro.imagem}" alt="${livro.titulo}" />
-            <h3>${livro.titulo}</h3>
-            <p>${livro.autor}</p>
-            <button>Reservar</button>
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!data.values || data.values.length === 0) {
+          container.innerHTML = '<p>Nenhum livro encontrado.</p>';
+          return;
+        }
+        loadingSpinner.style.display = 'none';
+        loadingText.style.display = 'none';
+        data.values.forEach((livro) => {
+          const [titulo, autor, capa, estoque, sinopse, destaque] = livro;
+          if (!titulo || !autor || !capa || estoque === undefined || !sinopse) return;
+          const div = document.createElement('div');
+          div.classList.add('livro');
+          if (destaque === 'S') div.classList.add('destaque');
+          if (parseInt(estoque) === 0) div.classList.add('esgotado');
+          div.innerHTML = `
+            <img src="${capa}" alt="${titulo}">
+            <p class="titulo">${titulo}</p>
+            <p>${autor}</p>
+            <p><small>${sinopse}</small></p>
+            <p>Estoque: ${estoque}</p>
+            <button class="acao quero">Quero esse</button>
+            <button class="acao devolvendo">Devolvendo</button>
           `;
-
-          card.querySelector("button").addEventListener("click", async () => {
-            const usuario = prompt("Digite seu nome:");
-            const tipoUsuario = prompt("Você é aluno ou professor?");
-            const turma = prompt("Digite sua turma:");
-            const dataEmprestimo = new Date();
-            const dataDevolucao = new Date();
-            dataDevolucao.setDate(dataEmprestimo.getDate() + 7);
-
-            const dados = {
-              livro: livro.titulo,
-              usuario,
-              tipoUsuario,
-              turma,
-              dataEmprestimo: dataEmprestimo.toISOString().split("T")[0],
-              dataDevolucao: dataDevolucao.toISOString().split("T")[0]
-            };
-
-            try {
-              await addDoc(collection(db, "emprestimos"), dados);
-              mostrarMensagem(livro.titulo, dados.dataDevolucao);
-              enviarEmailReserva(dados);
-            } catch (e) {
-              console.error("Erro ao registrar empréstimo: ", e);
-            }
-          });
-
-          container.appendChild(card);
+          container.appendChild(div);
         });
-      } catch (e) {
-        console.error("Erro ao carregar livros:", e);
+        aplicarFuncionalidades();
+      } catch (error) {
+        console.error('Erro ao carregar livros:', error);
+        container.innerHTML = '<p>Erro ao carregar livros. Verifique sua conexão.</p>';
       }
     }
-
-    function enviarEmailReserva(dados) {
-      emailjs.send("service_dfowbom", "template_dsk1hn8", {
-        livro: dados.livro,
-        usuario: dados.usuario,
-        tipoUsuario: dados.tipoUsuario,
-        turma: dados.turma,
-        dataEmprestimo: dados.dataEmprestimo,
-        dataDevolucao: dados.dataDevolucao
-      }).then(() => {
-        console.log("Email enviado!");
-      }).catch((err) => {
-        console.error("Erro ao enviar email:", err);
+    function aplicarFuncionalidades() {
+      document.querySelectorAll('.quero').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const livroElement = btn.closest('.livro');
+          const titulo = livroElement.querySelector('.titulo').innerText;
+          const usuario = prompt("Digite seu nome:");
+          if (!usuario) return;
+          const tipoUsuario = prompt("Você é aluno ou professor?");
+          if (!tipoUsuario) return;
+          const turma = prompt("Digite sua turma ou disciplina:");
+          if (!turma) return;
+          const dataEmprestimo = new Date().toISOString().split('T')[0];
+          const dataDevolucao = calcularDataDevolucao(diasDevolucao);
+          const emprestimo = {
+            livro: titulo,
+            usuario,
+            tipoUsuario,
+            turma,
+            dataEmprestimo,
+            dataDevolucao,
+            status: "pendente"
+          };
+          try {
+            const docRef = await addDoc(collection(db, 'emprestimos'), emprestimo);
+            console.log("Empréstimo registrado com ID: ", docRef.id);
+            mostrarMensagem(titulo, dataDevolucao);
+          } catch (e) {
+            console.error("Erro ao adicionar documento: ", e);
+          }
+        });
+      });
+      document.querySelectorAll('.devolvendo').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const livroElement = btn.closest('.livro');
+          const titulo = livroElement.querySelector('.titulo').innerText;
+          const usuario = prompt("Digite seu nome para devolução:");
+          if (!usuario) {
+            alert("O nome do usuário é obrigatório para a devolução.");
+            return;
+          }
+          const devolucao = {
+            livro: titulo,
+            usuario,
+            dataDevolucao: new Date().toISOString().split('T')[0]
+          };
+          try {
+            const docRef = await addDoc(collection(db, 'devolucao'), devolucao);
+            console.log("Devolução registrada com ID: ", docRef.id);
+            alert(`Livro "${titulo}" devolvido com sucesso!`);
+          } catch (e) {
+            console.error("Erro ao registrar devolução: ", e);
+            alert("Erro ao registrar devolução. Tente novamente.");
+          }
+        });
       });
     }
-
-    function mostrarMensagem(titulo, data) {
-      const mensagem = document.getElementById("mensagem");
-      document.getElementById("livro-titulo").innerText = `📖 ${titulo}`;
-      document.getElementById("data-devolucao").innerText = `Devolução prevista: ${data}`;
-      mensagem.style.display = "block";
+    function mostrarMensagem(titulo, dataDevolucao) {
+      const mensagem = document.getElementById('mensagem');
+      document.getElementById('livro-titulo').innerText = titulo;
+      document.getElementById('data-devolucao').innerText = `Data de devolução: ${dataDevolucao}`;
+      mensagem.style.display = 'block';
+      mensagem.style.opacity = '1';
       setTimeout(() => {
-        mensagem.style.display = "none";
+        mensagem.style.opacity = '0';
+        setTimeout(() => mensagem.style.display = 'none', 500);
       }, 5000);
     }
-
     carregarLivros();
-  </script>
-
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
-  <script>
-    (function() {
-      emailjs.init("FnhDPuvUd77_2JkKW");
-    })();
   </script>
 </body>
 </html>
